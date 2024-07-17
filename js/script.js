@@ -1,14 +1,9 @@
-const result = document.querySelector('.calc-result');
+const result = document.querySelector('.calc-header');
 
 result.addEventListener('click', (e) => {
   const target = e.target;
 
-  switch(target.id){
-    case 'history-btn':
-      result.classList.toggle('history');
-      break;
-    default:
-      console.log("nothing");
-      break;
+  if(target.closest('#history-btn')){
+    result.classList.toggle('history');
   }
 })
