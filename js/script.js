@@ -219,97 +219,191 @@ const calculation = (equation) => {
   console.log(output);
   console.log(equations);
 
-  let prior = 0;
-  let startIndex = 0;
-  let endIndex = equations.length;
-  while(prior <= 5){
-    let noMatch = true;
-    if(priorityCheck(equations, prior, output, noMatch, startIndex, endIndex)){
-      console.log("Prior di tambah");
-      prior++;
-    }
-  }
+  let start = 0;
+  let end = equations.length;
+
+  execute(equations, output, start, end);
+
   console.log(output);
 }
 
-const priorityCheck = (equations, prior, output, noMatch, startIndex, endIndex) => {
-  equations.slice(startIndex, endIndex).forEach((op, index) => {
-    console.log("operator: "+op);
-    console.log(`if(${priority[op]} === ${prior})`);
-    if(priority[op] === prior){
-      let here;
-      let there;
-      console.log("startIndex: "+startIndex);
-      console.log("index: "+index);
-      if(startIndex !== 0){
-        here = startIndex - 1;
-        there = startIndex;
-        console.log("here: "+here);
-      }else{
-        here = startIndex;
-        there = startIndex + 1;
+const execute = (equations, output, start, end) => {
+  let prior = 0;
+  while(prior <= 5){
+    let noMatch = true;
+    console.log("Priority: "+prior);
+    if(priorityCheck(equations, output, prior, noMatch, start, end)){
+      if(prior === 0){
+        console.log("There is no (");
+      }else if(prior === 1){
+        console.log("There is no /");
+      }else if(prior === 2){
+        console.log("There is no x");
+      }else if(prior === 3){
+        console.log("There is no -");
+      }else if(prior === 4){
+        console.log("There is no +");
+      }else if(prior === 5){
+        console.log("There is no )");
       }
-      console.log(`kalkulasi untuk bilangan ${output[here]} ${op} ${output[there]}`);
-      let tempResult = parseFloat(output[here]);
-      let a = parseFloat(output[here]);
-      let b = parseFloat(output[there]);
-      if(op === '('){
-        console.log("ketemu brackets buka");
-        
-        let start = 0;
-        let bracketPosition = index+1;
-        let closeBracketPosition = checkClosedBrackets(equations);
+      console.log("Prior ditambah");
+      prior++;
+    }
+    console.log("========================================")
+  }
+}
 
-        console.log(`Start ${bracketPosition}, end ${closeBracketPosition}`);
+const priorityCheck = (equations, output, prior, noMatch, bracketsStart, bracketsEnd) => {
+  for(let index = bracketsStart; index < bracketsEnd; index++){
+    console.log("Angka sekarang: "+output.slice(bracketsStart, bracketsEnd));
+    console.log("Operator sekarang: "+equations.slice(bracketsStart, bracketsEnd));
+    let operator = equations[index];
+    let closedBrackets = false;
+    let insideBrackets = false;
+    if(priority[operator] === prior){
+      let a = parseFloat(output[index]);
+      let b = parseFloat(output[index + 1]);
+      let result = a;
+      console.log(`Lakukan ${a} ${operator} ${b}`);
+      switch(priority[operator]){
+        case 0:
+          console.log('(');
 
-        while(start <= 5){
-          console.log("Cek lagi di dalam brackets");
-          if(priorityCheck(equations, start, output, noMatch, bracketPosition, closeBracketPosition)){
-            start++;
-          }
-        }
-        console.log("brackets buka dihapus");
-        console.log(`hapus ${equations[index]}`);
-        equations.splice(index, 2);
-        console.log("equations: "+ equations)
+          let {startBrackets, endBrackets} = findEndBrackets(equations, index)
+
+          equations.splice(startBrackets, 1);
+          // equations.splice(endBrackets - 1, 1);
+
+          console.log("Operator dalam Kurung: "+equations.slice(startBrackets, endBrackets - 1));
+          console.log("Angka dalam Kurung: "+output.slice(startBrackets, endBrackets - 1));
+
+          execute(equations, output, startBrackets, endBrackets - 1);
+          // while(true){
+          //   let brackets = findBrackets(equations, index);
+
+          //   if(!brackets){
+          //     break;
+          //   }
+            
+          //   let {startBrackets, endBrackets} = brackets;
+
+          //   // console.log("Operator dalam Kurung: "+equations.slice(startBrackets + 1, endBrackets));
+          //   // console.log("Angka dalam Kurung: "+output.slice(startBrackets, endBrackets));
+
+            
+          //   let newPrior = 0;
+          //   endBrackets = endBrackets - 1 - newPrior;
+          //   equations.splice(startBrackets, 1);
+          //   equations.splice(endBrackets, 1);
+
+          //   while(newPrior <= 4){
+          //     console.log("=================INSIDE BRACKETS================")
+          //     console.log("Operator dalam Kurung: "+equations.slice(startBrackets, endBrackets));
+          //     console.log("Angka dalam Kurung: "+output.slice(startBrackets, endBrackets));
+          //     if(priorityCheck(equations, output, newPrior, noMatch, startBrackets, endBrackets)){
+          //       if(newPrior === 0){
+          //         console.log("There is no (");
+          //       }else if(newPrior === 1){
+          //         console.log("There is no /");
+          //       }else if(newPrior === 2){
+          //         console.log("There is no x");
+          //       }else if(newPrior === 3){
+          //         console.log("There is no -");
+          //       }else if(newPrior === 4){
+          //         console.log("There is no +");
+          //       }else if(newPrior === 5){
+          //         console.log("There is no )");
+          //       }
+          //       newPrior++;
+          //       console.log("New Prior ditambah");
+          //     }
+          //   }
+
+          //   console.log("Lokasi Kurung Buka: "+startBrackets);
+          //   console.log("Lokasi Kurung Tutup: "+endBrackets);
+          // }
+          insideBrackets = true;
+          break;
+        case 1:
+          console.log('/');
+          result = Math.ceil((a / b) * 100) / 100;
+          break;
+        case 2:
+          console.log('x');
+          result = a * b;
+          break;
+        case 3:
+          console.log('-');
+          result = a - b;
+          break;
+        case 4:
+          console.log('+');
+          result = a + b;
+          break;
+        case 5:
+          console.log(')');
+          closedBrackets = true;
+          break;
+        default:
+          console.log("Invalid Input");
+          break;
+      }
+      if(closedBrackets){
+        equations.splice(index, 1);
         return noMatch;
       }
-      else if(op === '÷'){
-        tempResult = a / b;
-        tempResult = Math.ceil(tempResult * 100);
-        tempResult = tempResult / 100;
-      }else if(op === '×'){
-        tempResult = a * b;
-      }else if(op === '−'){
-        tempResult = a - b;
-      }else if(op === '+'){
-        tempResult = a + b;
-      }else if(op === ')'){
-        return;
+      else if(!insideBrackets){
+        console.log(`Hasil= `+result);
+        output.splice(index, 2, result);
+        equations.splice(index, 1);
       }
-      console.log('hasil: '+tempResult);
-      console.log(`hapus ${equations[startIndex]}`);
-      equations.splice(startIndex, 1);
-      console.log("equations: "+ equations);
-      output.splice(here, 2, tempResult);
-      console.log("output: "+ output);
       noMatch = false;
+      break;
+    }else{
+      console.log("Try Looking for higher priority");
+      console.log(`${operator} not priority right now`);
     }
-  })
+  }
 
   return noMatch;
 }
 
-const checkClosedBrackets = (equations)=> {
-  let closeBrackets;
-  equations.forEach((op, index) => {
-    console.log(op + " index: "+index);
-    if(op === ')'){
-      closeBrackets = index;
-    }
-  })
+const findEndBrackets = (equations, index) => {
+  let startBrackets = index;
+  let endBrackets = index + 1;
 
-  return closeBrackets;
+  while(endBrackets < equations.length){
+    if(equations[endBrackets] === ')'){
+      console.log(`Ketemu tutup kurung, kembalikan index ${startBrackets} dan ${endBrackets}`);
+      return {startBrackets, endBrackets};
+    }
+    endBrackets++;
+  }
+
+  return null;
+}
+
+const findBrackets = (equations, index) => {
+  console.log("Cari Posisi Brackets");
+  let startBrackets = index;
+  let endBrackets = index + 1;
+  console.log("StartBrackets Pos: " + startBrackets);
+  while (endBrackets < equations.length) {
+    if (equations[endBrackets] === ')') {
+      console.log(`Ketemu tutup kurung, kembalikan index ${startBrackets} dan ${endBrackets}`);
+      return {startBrackets, endBrackets};
+    } else if (equations[endBrackets] === '(') {
+      console.log("Ketemu nested Brackets pada index: " + endBrackets);
+      const innerBrackets = findBrackets(equations, endBrackets);
+
+      if(innerBrackets){
+        return innerBrackets;
+      }
+    }
+    endBrackets++;
+  }
+
+  return null;
 }
 
 const priority = {
