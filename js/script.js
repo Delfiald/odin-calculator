@@ -341,7 +341,7 @@ const priorityCheck = (equations, output, prior, noMatch, bracketsStart, bracket
           result = a + b;
           break;
         case 5:
-          console.log(')');
+          console.log('Ketemu )');
           closedBrackets = true;
           break;
         default:
@@ -359,7 +359,11 @@ const priorityCheck = (equations, output, prior, noMatch, bracketsStart, bracket
       }
       noMatch = false;
       break;
-    }else{
+    }else if(priority[operator] === 5){
+      console.log('Ketemu ) tapi tidak sesuai');
+      return noMatch;
+    }
+      else{
       console.log("Try Looking for higher priority");
       console.log(`${operator} not priority right now`);
     }
