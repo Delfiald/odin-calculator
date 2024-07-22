@@ -94,6 +94,7 @@ body {
 }
 
 .calc-header .result-wrapper {
+  min-height: 59px;
   padding: 1rem;
   align-self: flex-end;
   flex: 1;

@@ -18,25 +18,20 @@ calc.addEventListener('click', (e) => {
   if(target.closest('.numbers')){
     let part = result.innerText.split(/[÷/×/−/+]/);
     if(target.id === 'clear'){
-      result.innerText = 0;
+      result.innerText = '';
     }else if(target.id === 'point'){
       if(!part[part.length - 1].includes('.')){
         if(result.textContent.endsWith('÷') || result.textContent.endsWith('×') || result.textContent.endsWith('−') || result.textContent.endsWith('+')){
           return;
+        }else if(result.innerText === '' || result.innerText.endsWith('-')){
+          result.innerText += '0';
         }
         result.innerText += target.dataset.value;
       }
     }else if(target.id === 'delete'){
       result.innerText = result.innerText.slice(0, -1);
-      if(result.innerText === ''){
-        result.innerText = 0;
-      }
     }
     else{
-      if(target.id && result.innerText === '0'){
-        console.log('run');
-        result.innerText = '';
-      }
       switch(target.id){
         case 'number-1':
           if(result.innerText.endsWith(')')){
@@ -101,26 +96,36 @@ calc.addEventListener('click', (e) => {
           }
           break;
         case 'plus-minus':
-          let length = part[part.length - 1].length
-          if(part[part.length - 1].includes('(-')){
-            part[part.length - 1] = part[part.length - 1].substring(2);
-          }else{
-            part[part.length - 1] = '(-' + part[part.length - 1];
-          }
-          console.log(result.innerText);
-          if(length === 0 || result.innerText === ''){
+          if(result.textContent.endsWith('÷') || result.textContent.endsWith('×') || result.textContent.endsWith('−') || result.textContent.endsWith('+') || result.textContent.endsWith('(') || result.innerText === ''){
             result.innerText += '(-';
-          }else{
-            console.log(length);
-            result.innerText = result.innerText.slice(0, -length)
-            result.innerText += part[part.length-1];
+          }else if(result.textContent.endsWith(')')){
+            result.innerText += '×(-';
+          }
+          else{
+            let length = part[part.length - 1].length;
+            if(part[part.length - 1].endsWith('-')){
+              result.innerText = result.innerText.slice(result.length, -2);
+            }
+            else if(part[part.length - 1].includes('(-')){
+              part[part.length - 1] = part[part.length - 1].substring(2);
+              result.innerText = result.innerText.slice(result.length, -length);
+              
+              result.innerText += part[part.length - 1];
+            }else{
+              console.log("length "+length);
+              console.log(part[part.length - 1]);
+              result.innerText = result.innerText.slice(result.length, -length);
+              part[part.length - 1] = '(-' + part[part.length - 1];
+              result.innerText += part[part.length - 1];
+            }
           }
           break;
         case 'brackets':
-          if(result.textContent.endsWith('÷') || result.textContent.endsWith('×') || result.textContent.endsWith('−') || result.textContent.endsWith('+') || result.textContent.endsWith('(')){
+          console.log(result.innerText);
+          if(result.textContent.endsWith('÷') || result.textContent.endsWith('×') || result.textContent.endsWith('−') || result.textContent.endsWith('+') || result.textContent.endsWith('(') || result.textContent.endsWith('-')){
             result.textContent += '(';
-          }else if(result.textContent === ''){
-            result.textContent += '0×(';
+          }else if(result.innerText === ''){
+            result.textContent = '(';
           }else{
             let open = 0;
             let close = 0;
@@ -153,9 +158,10 @@ calc.addEventListener('click', (e) => {
         return;
       }
       checkBrackets(result.innerText);
-      calculation(result.innerText);
+      const finalResult = calculation(result.innerText);
+      result.innerText = finalResult;
     }else{
-      if(part.endsWith('÷') || part.endsWith('×') || part.endsWith('−') || part.endsWith('+') || part.endsWith('.') || part.endsWith('-') || part.endsWith('(')){
+      if(result.innerText === '' || part.endsWith('÷') || part.endsWith('×') || part.endsWith('−') || part.endsWith('+') || part.endsWith('.') || part.endsWith('-') || part.endsWith('(')){
         return;
       }
       result.innerText += target.dataset.value;
@@ -195,8 +201,8 @@ const calculation = (equation) => {
   const number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-'];
   const operators = ['÷', '×', '−', '+', '(', ')'];
 
-  const output = [];
-  const equations = [];
+  let output = [];
+  let equations = [];
   let temp = '';
   for(let i = 0; i < equation.length; i++){
     const char = equation.charAt(i);
@@ -216,6 +222,22 @@ const calculation = (equation) => {
     output.push(temp);
   }
 
+  let indices = [];
+  output = output.map((item, index) => {
+      if (item === '-') {
+          indices.push(index);
+          return -1;
+      }
+      return item;
+  });
+
+  console.log(indices);
+
+  indices.forEach(index => {
+    let insertTimes = index + 1;
+    equations.splice(insertTimes, 0, '×');
+  })
+
   console.log(output);
   console.log(equations);
 
@@ -225,6 +247,8 @@ const calculation = (equation) => {
   execute(equations, output, start, end);
 
   console.log(output);
+
+  return output;
 }
 
 const execute = (equations, output, start, end) => {
@@ -272,56 +296,19 @@ const priorityCheck = (equations, output, prior, noMatch, bracketsStart, bracket
           let {startBrackets, endBrackets} = findEndBrackets(equations, index)
 
           equations.splice(startBrackets, 1);
-          // equations.splice(endBrackets - 1, 1);
 
           console.log("Operator dalam Kurung: "+equations.slice(startBrackets, endBrackets - 1));
+
+          if(equations.slice(startBrackets, endBrackets - 1) == ''){
+            console.log("OP");
+            equations.splice(index, 1);
+            return noMatch;
+          }
+          
           console.log("Angka dalam Kurung: "+output.slice(startBrackets, endBrackets - 1));
 
           execute(equations, output, startBrackets, endBrackets - 1);
-          // while(true){
-          //   let brackets = findBrackets(equations, index);
-
-          //   if(!brackets){
-          //     break;
-          //   }
-            
-          //   let {startBrackets, endBrackets} = brackets;
-
-          //   // console.log("Operator dalam Kurung: "+equations.slice(startBrackets + 1, endBrackets));
-          //   // console.log("Angka dalam Kurung: "+output.slice(startBrackets, endBrackets));
-
-            
-          //   let newPrior = 0;
-          //   endBrackets = endBrackets - 1 - newPrior;
-          //   equations.splice(startBrackets, 1);
-          //   equations.splice(endBrackets, 1);
-
-          //   while(newPrior <= 4){
-          //     console.log("=================INSIDE BRACKETS================")
-          //     console.log("Operator dalam Kurung: "+equations.slice(startBrackets, endBrackets));
-          //     console.log("Angka dalam Kurung: "+output.slice(startBrackets, endBrackets));
-          //     if(priorityCheck(equations, output, newPrior, noMatch, startBrackets, endBrackets)){
-          //       if(newPrior === 0){
-          //         console.log("There is no (");
-          //       }else if(newPrior === 1){
-          //         console.log("There is no /");
-          //       }else if(newPrior === 2){
-          //         console.log("There is no x");
-          //       }else if(newPrior === 3){
-          //         console.log("There is no -");
-          //       }else if(newPrior === 4){
-          //         console.log("There is no +");
-          //       }else if(newPrior === 5){
-          //         console.log("There is no )");
-          //       }
-          //       newPrior++;
-          //       console.log("New Prior ditambah");
-          //     }
-          //   }
-
-          //   console.log("Lokasi Kurung Buka: "+startBrackets);
-          //   console.log("Lokasi Kurung Tutup: "+endBrackets);
-          // }
+          
           insideBrackets = true;
           break;
         case 1:
