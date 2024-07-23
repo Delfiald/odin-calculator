@@ -9,9 +9,20 @@
 </head>
 <body>
   <div class="container">
-    <header>
+    <header class="header">
       <div id="hero">
         <h1 class="xl-header">Odin Calculator</h1>
+      </div>
+      <div class="socials">
+        <div class="socials-button btn">
+          <i class="fas fa-arrow-left"></i>
+        </div>
+        <div class="socials-wrapper">
+          <div>
+            <i class="fab fa-github btn"></i>
+            <i class="fab fa-linkedin btn"></i>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -25,72 +36,75 @@
               </div>
             </div>
             <div class="result-wrapper">
+              <div id="clear-button" class="btn">C</div>
+              <div id="delete-button" class="btn"><i class="fas fa-delete-left"></i></div>
               <div id="result"> </div>
             </div>
           </div>
           <div class="history">
-            <div>start</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>100</div>
-            <div>end</div>
+            <div class="history-inner">
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history">2+3-(3+3)</div>
+              <div id="results-history">=3</div>
+              <div id="calculations-history" class="btn">2+3-(3+3)</div>
+              <div id="results-history" class="btn">=33</div>
+            </div>
           </div>
         </div>
         <div class="calc-body">
-          <div class="numbers">
-            <div class="btn" id="clear">C</div>
-            <div class="btn" id="brackets">()</div>
-            <div class="btn" id="delete"><i class="fas fa-remove"></i></div>
-            <div class="btn" id="number-7" data-value="7">7</div>
-            <div class="btn" id="number-8" data-value="8">8</div>
-            <div class="btn" id="number-9" data-value="9">9</div>
-            <div class="btn" id="number-4" data-value="4">4</div>
-            <div class="btn" id="number-5" data-value="5">5</div>
-            <div class="btn" id="number-6" data-value="6">6</div>
-            <div class="btn" id="number-1" data-value="1">1</div>
-            <div class="btn" id="number-2" data-value="2">2</div>
-            <div class="btn" id="number-3" data-value="3">3</div>
-            <div class="btn" id="plus-minus">+/-</div>
-            <div class="btn" id="number-0" data-value="0">0</div>
-            <div class="btn" id="point" data-value=".">.</div>
+          <div class="numbers" id="numbers">
+            <div class="btn" id="clear"><div>C</div></div>
+            <div class="btn" id="brackets"><div>()</div></div>
+            <div class="btn" id="delete"><i class="fas fa-delete-left"></i></div>
+            <div class="btn" id="number-7" data-value="7"><div>7</div></div>
+            <div class="btn" id="number-8" data-value="8"><div>8</div></div>
+            <div class="btn" id="number-9" data-value="9"><div>9</div></div>
+            <div class="btn" id="number-4" data-value="4"><div>4</div></div>
+            <div class="btn" id="number-5" data-value="5"><div>5</div></div>
+            <div class="btn" id="number-6" data-value="6"><div>6</div></div>
+            <div class="btn" id="number-1" data-value="1"><div>1</div></div>
+            <div class="btn" id="number-2" data-value="2"><div>2</div></div>
+            <div class="btn" id="number-3" data-value="3"><div>3</div></div>
+            <div class="btn" id="plus-minus"><div>+/-</div></div>
+            <div class="btn" id="number-0" data-value="0"><div>0</div></div>
+            <div class="btn" id="point" data-value="."><div>.</div></div>
           </div>
           <div class="operator">
-            <div class="btn" data-value="&divide;">&divide;</div>
-            <div class="btn" data-value="&times;">&times;</div>
-            <div class="btn" data-value="&minus;">&minus;</div>
-            <div class="btn" data-value="&plus;">&plus;</div>
-            <div class="btn" id="equals">&equals;</div>
+            <div class="btn" data-value="&divide;"><div>&divide;</div></div>
+            <div class="btn" data-value="&times;"><div>&times;</div></div>
+            <div class="btn" data-value="&minus;"><div>&minus;</div></div>
+            <div class="btn" data-value="&plus;"><div>&plus;</div></div>
+            <div class="btn" id="equals"><div>&equals;</div></div>
           </div>
         </div>
+        <div id="invalid">Invalid Format Used</div>
       </div>
     </main>
   </div>

@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
+:root{
+  --primary-color: #F1E6E0;
+  --secondary-color: #9b2d0f;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -10,25 +15,26 @@ body {
   font-family: 'Roboto', sans-serif;
   line-height: 1.6;
   overflow: hidden;
+  color: var(--secondary-color);
+  background: #f4f4f4;
 }
 
 .xl-header {
   font-size: 3rem;
-  padding: 1rem;
+  padding: .5rem;
 }
 
 .btn {
   cursor: pointer;
-  padding: 1.5rem .5rem;
+  padding: 1rem .25rem;
   border: 1px solid #ccc;
+  transition: .5s all ease;
+  overflow: hidden;
+  font-size: 1.5rem;
 }
 
 .btn:hover {
-  border: 1px solid #333;
-}
-
-.btn:active {
-  opacity: .8;
+  filter: brightness(.85);
 }
 
 .container {
@@ -40,12 +46,91 @@ body {
   height: 100vh;
 }
 
+/* Header */
+header {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+}
+
+header .socials {
+  position: relative;
+  width: 75vh;
+  transform: scaleX(1);
+  transition: 1s all ease;
+  display: flex;
+}
+
+header .socials .socials-button {
+  position: absolute;
+  width: 65px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--secondary-color);
+  color: #fff;
+  z-index: 2;
+  left: 50%;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(100px);
+  transition: 1s all ease;
+}
+
+.socials.button .socials-button {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+} 
+
+.socials.show .socials-button {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-37.5vh);
+}
+
+.socials .socials-wrapper {
+  padding: 1rem;
+  border-radius: 50px;
+  width: 100%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  transition: 1s all ease;
+  transform: scaleX(0);
+}
+
+.socials .socials-wrapper .btn {
+  padding: 0 1rem;
+  border: none;
+}
+
+.socials .socials-wrapper > div {
+  transition: .5s all 1s ease;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.socials.show .socials-wrapper > div {
+  opacity: 1;
+  visibility: visible;
+}
+
+.socials.show .socials-wrapper {
+  transform: scaleX(1);
+}
+
 /* Main */
 .calc-container {
   position: relative;
   width: 100%;
-  max-width: 900px;
-  /* height: 65vh; */
+  max-width: 700px;
+  height: 75vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -53,6 +138,9 @@ body {
   border: 1px solid #ccc;
   padding: 1rem;
   gap: 1rem;
+  border-radius: 5px;
+  outline: 1px solid #ccc;
+  background: #fff;
 }
 
 /* Calculator Header */
@@ -94,12 +182,75 @@ body {
 }
 
 .calc-header .result-wrapper {
-  min-height: 59px;
+  position: relative;
+  min-height: 8.5vh;
   padding: 1rem;
   align-self: flex-end;
   flex: 1;
   text-align: right;
   border-top: 1px solid #ccc;
+  width: 100%;
+  display: flex;
+}
+
+.calc-header .result-wrapper .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  padding: 0;
+  border: none;
+  font-size: 1rem;
+  padding: 0 1rem;
+  transition: .5s all ease 0s;
+}
+
+.calc-header .result-wrapper .btn:first-child {
+  border-right: 1px solid #ccc;
+}
+
+.calc-header.history .result-wrapper .btn {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 1s;
+}
+
+.calc-header .result-wrapper #result {
+  position: relative;
+  flex: 1;
+  overflow-x: auto;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.calc-header .result-wrapper #result::before {
+  content: '';
+  top: 50%;
+  right: 0;
+  position: absolute;
+  height: 100%;
+  width: 1px;
+  background: var(--secondary-color);
+  transform: translateY(-50%);
+  animation: write 1s step-start infinite;
+}
+
+.calc-header .result-wrapper #result.paused::before{
+  animation: none;
+}
+
+.calc-header #result::-webkit-scrollbar{
+  height: 3px;
+}
+
+.calc-header #result::-webkit-scrollbar-track {
+  background: #f4f4f4;
+}
+
+.calc-header #result::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 6px;
 }
 
 .calc-header .history {
@@ -111,7 +262,7 @@ body {
   width: 100%;
   height: 0;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   align-items: flex-end;
   justify-content: flex-start;
   overflow-y: auto;
@@ -132,6 +283,33 @@ body {
   border-radius: 6px;
 }
 
+.calc-header .history .history-inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-end;
+}
+
+.calc-header .history .history-inner > .btn {
+  padding: 0;
+  border: none;
+  font-size: 1rem;
+}
+
+.calc-header .history .history-inner > .btn:hover {
+  opacity: .75;
+}
+
+.calc-header .history #calculations-history {
+  color: var(--secondary-color);
+  opacity: .65;
+}
+
+.calc-header .history #results-history {
+  color: var(--secondary-color);
+  font-size: 1.2rem;
+}
+
 .calc-header.history .history {
   height: 80%;
   opacity: 1;
@@ -139,7 +317,7 @@ body {
 }
 
 .calc-header.history .calc-header-wrapper {
-  height: calc(65vh - 2rem);
+  height: calc(75vh - 2rem);
 }
 
 .calc-header.history ~ .calc-body {
@@ -167,10 +345,19 @@ body {
 }
 
 .calc-container .calc-body .operator > div {
+  min-height: 75px;
   flex: 1 1 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 20px;
+  background: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+.calc-container .calc-body .operator > #equals {
+  background: var(--secondary-color);
+  color: #fff;
 }
 
 .calc-container .calc-body .numbers {
@@ -182,8 +369,51 @@ body {
 }
 
 .calc-container .calc-body .numbers > div {
+  position: relative;
+  height: 75px;
   width: calc(33.33% - 1rem);
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 20px;
+  background: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+.calc-container .calc-body .numbers > div > *,
+.calc-container .calc-body .operator > div > * {
+  transition: .25s all ease;
+}
+
+.calc-container .calc-body .numbers > div:active > *,
+.calc-container .calc-body .operator > div:active > * {
+  transform: scale(.75);
+}
+
+#invalid {
+  position: absolute;
+  bottom: 5rem;
+  background: #333;
+  padding: .5rem .75rem;
+  width: 200px;
+  border-radius: 25px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  color: #fff;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: .5s all ease;
+}
+
+#invalid.show {
+  opacity: .75;
+  visibility: visible;
+}
+
+@keyframes write {
+  50% {
+    opacity: 0;
+  }
 }
