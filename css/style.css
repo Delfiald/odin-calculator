@@ -55,74 +55,84 @@ header {
 }
 
 header .socials {
-  position: relative;
-  width: 75vh;
+  max-width: 75vh;
   transform: scaleX(1);
-  transition: 1s all ease;
   display: flex;
+  align-items: center;
+  height: 30px;
+  width: 0%;
+  transform-origin: top;
+  transition: .75s all ease;
 }
 
-header .socials .socials-button {
+.socials.hide {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(50px);
+}
+
+.socials .btn {
+  border: none;
+  padding: 0;
+  font-size: 1rem;
+}
+
+.socials.show {
+  width: 100%;
+  opacity: 1;
+  visibility: visible;
+}
+
+.socials > div {
+  position: relative;
+  width: 100%;
+  height: inherit;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 1rem 0rem;
+  border-radius: 50px;
+  padding: 1rem 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: 1s all ease;
+}
+
+.socials.show > div {
+  visibility: visible;
+  opacity: 1;
+}
+
+.socials .socials-button {
   position: absolute;
-  width: 65px;
-  height: 100%;
+  left: 0;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  background-color: var(--secondary-color);
+  background: var(--secondary-color);
   color: #fff;
+  border-radius: 50%;
   z-index: 2;
-  left: 50%;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(-50%) translateY(100px);
-  transition: 1s all ease;
-}
-
-.socials.button .socials-button {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(0);
-} 
-
-.socials.show .socials-button {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-37.5vh);
 }
 
 .socials .socials-wrapper {
-  padding: 1rem;
-  border-radius: 50px;
-  width: 100%;
-  background: #fff;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #ccc;
-  transition: 1s all ease;
-  transform: scaleX(0);
-}
-
-.socials .socials-wrapper .btn {
-  padding: 0 1rem;
-  border: none;
-}
-
-.socials .socials-wrapper > div {
-  transition: .5s all 1s ease;
+  gap: 1rem;
   opacity: 0;
   visibility: hidden;
 }
 
-.socials.show .socials-wrapper > div {
+.socials.show .socials-wrapper {
   opacity: 1;
   visibility: visible;
-}
-
-.socials.show .socials-wrapper {
-  transform: scaleX(1);
 }
 
 /* Main */
@@ -161,19 +171,38 @@ header .socials .socials-button {
 }
 
 .calc-header .history-wrapper {
+  top: 0;
+  left: 0;
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
 
-.calc-header .history-wrapper .history-btn{
-  position: absolute;
-  top: 0;
-  left: 0;
+.calc-header .history-wrapper .history-btn {
   padding: 1rem;
   opacity: .3;
   transition: .5s all ease;
   z-index: 2;
+}
+
+.calc-header .history-wrapper .remove-history-btn {
+  opacity: 0;
+  visibility: hidden;
+  z-index: 2;
+  transition: .5s all ease;
+}
+
+.calc-header.history .history-wrapper .remove-history-btn {
+  opacity: .3;
+  visibility: visible;
+  padding: 1rem;
+}
+
+.calc-header.history .history-wrapper .remove-history-btn:hover {
+  opacity: 1;
+  cursor: pointer;
 }
 
 .calc-header .history-wrapper .history-btn:hover {
@@ -259,7 +288,7 @@ header .socials .socials-button {
   right: 0;
   margin: .5rem;
   padding: .5rem;
-  width: 100%;
+  width: 90%;
   height: 0;
   display: flex;
   flex-direction: column-reverse;
@@ -415,5 +444,37 @@ header .socials .socials-button {
 @keyframes write {
   50% {
     opacity: 0;
+  }
+}
+
+@keyframes socials-show {
+  0% {
+    transform: translateY(50px);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes socials-out {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  100% {
+    transform: translateY(50px);
+    opacity: 0;
+    visibility: hidden;
   }
 }

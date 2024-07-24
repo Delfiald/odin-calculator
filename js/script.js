@@ -5,6 +5,12 @@ history.addEventListener('click', (e) => {
 
   if(target.closest('#history-btn')){
     history.classList.toggle('history');
+  }else if(target.closest('#remove-history-btn')){
+    history.querySelector('.history-inner').textContent = '';
+  }else if(target.closest('#clear-button')){
+    result.innerText = '';
+  }else if(target.closest('#delete-button')){
+    result.innerText = result.innerText.slice(0, -1);
   }
 })
 
@@ -14,39 +20,36 @@ const invalidHandler = document.getElementById('invalid');
 const list = [];
 
 const title = document.querySelector('.header');
-const socialsBtn = document.querySelector('.socials');
+const socials = document.querySelector('.socials');
+const socialsBtn = document.querySelector('.socials .socials-button');
 const socialsWrapper = document.querySelector('.socials-wrapper');
 
-let isSocialClicked = false;
-let isSocialTransitioned = false;
+let isClicked = false;
+
+socials.addEventListener('click', (e) => {
+  const socialsTarget = e.target.closest('.socials-button');
+  e.preventDefault();
+
+  isClicked = !isClicked;
+
+  if (isClicked) {
+    socials.classList.add('show');
+  } else {
+    socials.classList.remove('show');
+  }
+})
 
 title.addEventListener('mouseover', (e) => {
-  if(!isSocialClicked && !isSocialTransitioned){
-    socialsBtn.classList.add('button');
+  if (!isClicked) {
+    socials.style.animation = "socials-show 1s ease forwards";
+    socials.classList.remove('hide');
   }
 })
 
 title.addEventListener('mouseout', (e) => {
-  if(!isSocialClicked && !isSocialTransitioned){
-    socialsBtn.classList.remove('button');
+  if (!isClicked) {
+    socials.style.animation = "socials-out 1s ease .5s forwards";
   }
-})
-
-socialsBtn.addEventListener('click', (e) => {
-  const socialsTarget = e.target.closest('.btn');
-  e.preventDefault();
-
-  if(socialsTarget && socialsTarget.closest('.socials-button')){
-    isSocialClicked = !isSocialClicked;
-    isSocialTransitioned = true;
-    socialsBtn.classList.toggle('show');
-    socialsBtn.classList.add('button');
-  }
-})
-
-socialsWrapper.addEventListener('transitionend', (e) => {
-  isSocialTransitioned = false;
-  socialsBtn.classList.remove('button');
 })
 
 calc.addEventListener('click', (e) => {
@@ -54,6 +57,7 @@ calc.addEventListener('click', (e) => {
   e.preventDefault();
   let typing = false;
   let typingTimeOut;
+  
   if(target){
     if(!typing){
       typing = true;
