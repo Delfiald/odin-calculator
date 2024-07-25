@@ -1,4 +1,5 @@
 const history = document.querySelector('.calc-header');
+const historyWrapper = document.querySelector('.history-inner');
 
 history.addEventListener('click', (e) => {
   const target = e.target;
@@ -32,9 +33,9 @@ socials.addEventListener('click', (e) => {
 
   isClicked = !isClicked;
 
-  if (isClicked) {
-    socials.classList.add('show');
-  } else {
+  if (socialsTarget && isClicked) {
+    socials.classList.toggle('show');
+  } else if (socialsTarget && !isClicked) {
     socials.classList.remove('show');
   }
 })
@@ -217,6 +218,7 @@ calc.addEventListener('click', (e) => {
         }
         checkBrackets(result.innerText);
         const finalResult = calculation(result.innerText);
+        addingHistory(result.innerText, finalResult);
         result.innerText = finalResult;
       }else{
         if(result.innerText === '' || part.endsWith('÷') || part.endsWith('×') || part.endsWith('−') || part.endsWith('+') || part.endsWith('.') || part.endsWith('-') || part.endsWith('(')){
@@ -228,6 +230,32 @@ calc.addEventListener('click', (e) => {
     }
   }else{
     return;
+  }
+})
+
+const addingHistory = (equation, result) =>{
+  const equationHistory = document.createElement("div");
+  const resultHistory = document.createElement("div");
+
+  equationHistory.classList.add('calculations-history');
+  equationHistory.classList.add('btn');
+  resultHistory.classList.add('results-history');
+  resultHistory.classList.add('btn');
+
+  equationHistory.textContent = equation;
+  resultHistory.textContent = result;
+
+  historyWrapper.appendChild(equationHistory);
+  historyWrapper.appendChild(resultHistory);
+}
+
+historyWrapper.addEventListener('click', (e) => {
+  const equationHistory = e.target.closest('.calculations-history');
+  const resultHistory = e.target.closest('.results-history');
+  if(equationHistory){
+    result.innerText = equationHistory.innerText;
+  }else if(resultHistory){
+    result.innerText = resultHistory.innerText;
   }
 })
 

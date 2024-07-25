@@ -329,12 +329,12 @@ header .socials {
   opacity: .75;
 }
 
-.calc-header .history #calculations-history {
+.calc-header .history .calculations-history {
   color: var(--secondary-color);
   opacity: .65;
 }
 
-.calc-header .history #results-history {
+.calc-header .history .results-history {
   color: var(--secondary-color);
   font-size: 1.2rem;
 }
