@@ -22,36 +22,28 @@ const list = [];
 
 const title = document.querySelector('.header');
 const socials = document.querySelector('.socials');
-const socialsBtn = document.querySelector('.socials .socials-button');
+const socialsBtn = document.querySelector('.socials-button');
 const socialsWrapper = document.querySelector('.socials-wrapper');
 
 let isClicked = false;
 
-socials.addEventListener('click', (e) => {
-  const socialsTarget = e.target.closest('.socials-button');
+socialsBtn.addEventListener('click', (e) => {
   e.preventDefault();
-
-  isClicked = !isClicked;
-
-  if (socialsTarget && isClicked) {
-    socials.classList.toggle('show');
-  } else if (socialsTarget && !isClicked) {
-    socials.classList.remove('show');
-  }
+  socials.classList.toggle('show');
 })
 
-title.addEventListener('mouseover', (e) => {
-  if (!isClicked) {
-    socials.style.animation = "socials-show 1s ease forwards";
-    socials.classList.remove('hide');
-  }
-})
+// title.addEventListener('mouseover', (e) => {
+//   if (!isClicked) {
+//     socials.style.animation = "socials-show 1s ease forwards";
+//     socials.classList.remove('hide');
+//   }
+// })
 
-title.addEventListener('mouseout', (e) => {
-  if (!isClicked) {
-    socials.style.animation = "socials-out 1s ease .5s forwards";
-  }
-})
+// title.addEventListener('mouseout', (e) => {
+//   if (!isClicked) {
+//     socials.style.animation = "socials-out 1s ease .5s forwards";
+//   }
+// })
 
 calc.addEventListener('click', (e) => {
   const target = e.target.closest('.btn');
@@ -250,12 +242,15 @@ const addingHistory = (equation, result) =>{
 }
 
 historyWrapper.addEventListener('click', (e) => {
-  const equationHistory = e.target.closest('.calculations-history');
-  const resultHistory = e.target.closest('.results-history');
-  if(equationHistory){
-    result.innerText = equationHistory.innerText;
-  }else if(resultHistory){
-    result.innerText = resultHistory.innerText;
+  const history = e.target.closest('.btn');
+  if(history){
+    if(result.innerText.endsWith('÷') || result.innerText.endsWith('×') || result.innerText.endsWith('−') || result.innerText.endsWith('+')){
+      result.innerText += history.innerText;
+    }else{
+      result.innerText = history.innerText;
+    }
+  }else{
+    return;
   }
 })
 
