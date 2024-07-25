@@ -1,171 +1,256 @@
 const history = document.querySelector('.calc-header');
+const historyWrapper = document.querySelector('.history-inner');
 
 history.addEventListener('click', (e) => {
   const target = e.target;
 
   if(target.closest('#history-btn')){
     history.classList.toggle('history');
+  }else if(target.closest('#remove-history-btn')){
+    history.querySelector('.history-inner').textContent = '';
+  }else if(target.closest('#clear-button')){
+    result.innerText = '';
+  }else if(target.closest('#delete-button')){
+    result.innerText = result.innerText.slice(0, -1);
   }
 })
 
 const calc = document.querySelector('.calc-container');
 const result = document.getElementById('result');
+const invalidHandler = document.getElementById('invalid');
 const list = [];
 
-calc.addEventListener('click', (e) => {
-  const target = e.target;
+const title = document.querySelector('.header');
+const socials = document.querySelector('.socials');
+const socialsBtn = document.querySelector('.socials-button');
+const socialsWrapper = document.querySelector('.socials-wrapper');
 
-  if(target.closest('.numbers')){
-    let part = result.innerText.split(/[÷/×/−/+]/);
-    if(target.id === 'clear'){
-      result.innerText = '';
-    }else if(target.id === 'point'){
-      if(!part[part.length - 1].includes('.')){
-        if(result.textContent.endsWith('÷') || result.textContent.endsWith('×') || result.textContent.endsWith('−') || result.textContent.endsWith('+')){
-          return;
-        }else if(result.innerText === '' || result.innerText.endsWith('-')){
-          result.innerText += '0';
-        }
-        result.innerText += target.dataset.value;
-      }
-    }else if(target.id === 'delete'){
-      result.innerText = result.innerText.slice(0, -1);
+let isClicked = false;
+
+socialsBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  socials.classList.toggle('show');
+})
+
+// title.addEventListener('mouseover', (e) => {
+//   if (!isClicked) {
+//     socials.style.animation = "socials-show 1s ease forwards";
+//     socials.classList.remove('hide');
+//   }
+// })
+
+// title.addEventListener('mouseout', (e) => {
+//   if (!isClicked) {
+//     socials.style.animation = "socials-out 1s ease .5s forwards";
+//   }
+// })
+
+calc.addEventListener('click', (e) => {
+  const target = e.target.closest('.btn');
+  e.preventDefault();
+  let typing = false;
+  let typingTimeOut;
+  
+  if(target){
+    if(!typing){
+      typing = true;
+      result.classList.add('paused');
     }
-    else{
-      switch(target.id){
-        case 'number-1':
-          if(result.innerText.endsWith(')')){
-            result.innerText += '×';  
+    clearTimeout(typingTimeOut);
+    typingTimeout = setTimeout(() => {
+      typing = false;
+      result.classList.remove('paused');
+    }, 1000);
+    
+    if(target.closest('.numbers')){
+      let part = result.innerText.split(/[÷/×/−/+]/);
+      if(target.closest('#clear')){
+        result.innerText = '';
+      }else if(target.closest('#point')){
+        if(!part[part.length - 1].includes('.')){
+          if(result.textContent.endsWith('÷') || result.textContent.endsWith('×') || result.textContent.endsWith('−') || result.textContent.endsWith('+')){
+            return;
+          }else if(result.innerText === '' || result.innerText.endsWith('-') || result.innerText.endsWith('(')){
+            console.log("here");
+            result.innerText += '0';
           }
           result.innerText += target.dataset.value;
-          break;
-        case 'number-2':
-          if(result.innerText.endsWith(')')){
-            result.innerText += '×';  
-          }
-          result.innerText += target.dataset.value;
-          break;
-        case 'number-3':
-          if(result.innerText.endsWith(')')){
-            result.innerText += '×';  
-          }
-          result.innerText += target.dataset.value;
-          break;
-        case 'number-4':
-          if(result.innerText.endsWith(')')){
-            result.innerText += '×';  
-          }
-          result.innerText += target.dataset.value;
-          break;
-        case 'number-5':
-          if(result.innerText.endsWith(')')){
-            result.innerText += '×';  
-          }
-          result.innerText += target.dataset.value;
-          break;
-        case 'number-6':
-          if(result.innerText.endsWith(')')){
-            result.innerText += '×';  
-          }
-          result.innerText += target.dataset.value;
-          break;
-        case 'number-7':
-          if(result.innerText.endsWith(')')){
-            result.innerText += '×';  
-          }
-          result.innerText += target.dataset.value;
-          break;
-        case 'number-8':
-          if(result.innerText.endsWith(')')){
-            result.innerText += '×';  
-          }
-          result.innerText += target.dataset.value;
-          break;
-        case 'number-9':
-          if(result.innerText.endsWith(')')){
-            result.innerText += '×';  
-          }
-          result.innerText += target.dataset.value;
-          break;
-        case 'number-0':
-          if(result.innerText.endsWith(')')){
-            result.innerText += '×';  
-          }
-          if(!result.innerText.endsWith('0') || part[part.length - 1].includes('.')){
+        }
+      }else if(target.id === 'delete'){
+        result.innerText = result.innerText.slice(0, -1);
+      }
+      else{
+        switch(target.id){
+          case 'number-1':
+            if(result.innerText.endsWith(')')){
+              result.innerText += '×';  
+            }
             result.innerText += target.dataset.value;
-          }
-          break;
-        case 'plus-minus':
-          if(result.textContent.endsWith('÷') || result.textContent.endsWith('×') || result.textContent.endsWith('−') || result.textContent.endsWith('+') || result.textContent.endsWith('(') || result.innerText === ''){
-            result.innerText += '(-';
-          }else if(result.textContent.endsWith(')')){
-            result.innerText += '×(-';
-          }
-          else{
-            let length = part[part.length - 1].length;
-            if(part[part.length - 1].endsWith('-')){
-              result.innerText = result.innerText.slice(result.length, -2);
+            break;
+          case 'number-2':
+            if(result.innerText.endsWith(')')){
+              result.innerText += '×';  
             }
-            else if(part[part.length - 1].includes('(-')){
-              part[part.length - 1] = part[part.length - 1].substring(2);
-              result.innerText = result.innerText.slice(result.length, -length);
-              
-              result.innerText += part[part.length - 1];
-            }else{
-              console.log("length "+length);
-              console.log(part[part.length - 1]);
-              result.innerText = result.innerText.slice(result.length, -length);
-              part[part.length - 1] = '(-' + part[part.length - 1];
-              result.innerText += part[part.length - 1];
+            result.innerText += target.dataset.value;
+            break;
+          case 'number-3':
+            if(result.innerText.endsWith(')')){
+              result.innerText += '×';  
             }
-          }
-          break;
-        case 'brackets':
-          console.log(result.innerText);
-          if(result.textContent.endsWith('÷') || result.textContent.endsWith('×') || result.textContent.endsWith('−') || result.textContent.endsWith('+') || result.textContent.endsWith('(') || result.textContent.endsWith('-')){
-            result.textContent += '(';
-          }else if(result.innerText === ''){
-            result.textContent = '(';
-          }else{
-            let open = 0;
-            let close = 0;
-            for(let i = result.innerText.length - 1; i >= 0; i--){
-              if(result.innerText.charAt(i).includes('(')){
-                open++;
-              }else if(result.innerText.charAt(i).includes(')')){
-                close++;
+            result.innerText += target.dataset.value;
+            break;
+          case 'number-4':
+            if(result.innerText.endsWith(')')){
+              result.innerText += '×';  
+            }
+            result.innerText += target.dataset.value;
+            break;
+          case 'number-5':
+            if(result.innerText.endsWith(')')){
+              result.innerText += '×';  
+            }
+            result.innerText += target.dataset.value;
+            break;
+          case 'number-6':
+            if(result.innerText.endsWith(')')){
+              result.innerText += '×';  
+            }
+            result.innerText += target.dataset.value;
+            break;
+          case 'number-7':
+            if(result.innerText.endsWith(')')){
+              result.innerText += '×';  
+            }
+            result.innerText += target.dataset.value;
+            break;
+          case 'number-8':
+            if(result.innerText.endsWith(')')){
+              result.innerText += '×';  
+            }
+            result.innerText += target.dataset.value;
+            break;
+          case 'number-9':
+            if(result.innerText.endsWith(')')){
+              result.innerText += '×';  
+            }
+            result.innerText += target.dataset.value;
+            break;
+          case 'number-0':
+            if(result.innerText.endsWith(')')){
+              result.innerText += '×';  
+            }
+            if(!result.innerText.endsWith('0') || part[part.length - 1].includes('.')){
+              result.innerText += target.dataset.value;
+            }
+            break;
+          case 'plus-minus':
+            if(result.textContent.endsWith('÷') || result.textContent.endsWith('×') || result.textContent.endsWith('−') || result.textContent.endsWith('+') || result.textContent.endsWith('(') || result.innerText === ''){
+              result.innerText += '(-';
+            }else if(result.textContent.endsWith(')')){
+              result.innerText += '×(-';
+            }
+            else{
+              let length = part[part.length - 1].length;
+              if(part[part.length - 1].endsWith('-')){
+                result.innerText = result.innerText.slice(result.length, -2);
+              }
+              else if(part[part.length - 1].includes('(-')){
+                part[part.length - 1] = part[part.length - 1].substring(2);
+                result.innerText = result.innerText.slice(result.length, -length);
+                
+                result.innerText += part[part.length - 1];
+              }else{
+                console.log("length "+length);
+                console.log(part[part.length - 1]);
+                result.innerText = result.innerText.slice(result.length, -length);
+                part[part.length - 1] = '(-' + part[part.length - 1];
+                result.innerText += part[part.length - 1];
               }
             }
-            if(open > close){
-              result.textContent += ')';
-              return;
+            break;
+          case 'brackets':
+            console.log(result.innerText);
+            if(result.textContent.endsWith('÷') || result.textContent.endsWith('×') || result.textContent.endsWith('−') || result.textContent.endsWith('+') || result.textContent.endsWith('(') || result.textContent.endsWith('-')){
+              result.textContent += '(';
+            }else if(result.innerText === ''){
+              result.textContent = '(';
             }else{
-              result.textContent += '×(';
+              let open = 0;
+              let close = 0;
+              for(let i = result.innerText.length - 1; i >= 0; i--){
+                if(result.innerText.charAt(i).includes('(')){
+                  open++;
+                }else if(result.innerText.charAt(i).includes(')')){
+                  close++;
+                }
+              }
+              if(open > close){
+                result.textContent += ')';
+                return;
+              }else{
+                result.textContent += '×(';
+              }
             }
-          }
-          break;
-        default:
-          break;
+            break;
+          default:
+            break;
+        }
+      }
+    }else if(target.closest('.operator .btn')){
+      let part = result.textContent;
+      if(target.id === 'equals'){
+        if(part.endsWith('÷') || part.endsWith('×') || part.endsWith('−') || part.endsWith('+') || part.endsWith('-') || part.endsWith('(')){
+          invalidHandler.classList.add('show');
+          setTimeout(() => {
+            invalidHandler.classList.remove('show');
+        }, 2000);
+          return;
+        }else if(part.endsWith('.')){
+          return;
+        }
+        checkBrackets(result.innerText);
+        const finalResult = calculation(result.innerText);
+        addingHistory(result.innerText, finalResult);
+        result.innerText = finalResult;
+      }else{
+        if(result.innerText === '' || part.endsWith('÷') || part.endsWith('×') || part.endsWith('−') || part.endsWith('+') || part.endsWith('.') || part.endsWith('-') || part.endsWith('(')){
+          return;
+        }
+        console.log("Here: "+target.dataset.value+" and the target is: "+target.id);
+        result.innerText += target.dataset.value;
       }
     }
-  }else if(target.closest('.operator .btn')){
-    let part = result.textContent;
-    if(target.id === 'equals'){
-      if(part.endsWith('÷') || part.endsWith('×') || part.endsWith('−') || part.endsWith('+') || part.endsWith('-') || part.endsWith('(')){
-        alert("Invalid Format");
-        return;
-      }else if(part.endsWith('.')){
-        return;
-      }
-      checkBrackets(result.innerText);
-      const finalResult = calculation(result.innerText);
-      result.innerText = finalResult;
+  }else{
+    return;
+  }
+})
+
+const addingHistory = (equation, result) =>{
+  const equationHistory = document.createElement("div");
+  const resultHistory = document.createElement("div");
+
+  equationHistory.classList.add('calculations-history');
+  equationHistory.classList.add('btn');
+  resultHistory.classList.add('results-history');
+  resultHistory.classList.add('btn');
+
+  equationHistory.textContent = equation;
+  resultHistory.textContent = result;
+
+  historyWrapper.appendChild(equationHistory);
+  historyWrapper.appendChild(resultHistory);
+}
+
+historyWrapper.addEventListener('click', (e) => {
+  const history = e.target.closest('.btn');
+  if(history){
+    if(result.innerText.endsWith('÷') || result.innerText.endsWith('×') || result.innerText.endsWith('−') || result.innerText.endsWith('+')){
+      result.innerText += history.innerText;
     }else{
-      if(result.innerText === '' || part.endsWith('÷') || part.endsWith('×') || part.endsWith('−') || part.endsWith('+') || part.endsWith('.') || part.endsWith('-') || part.endsWith('(')){
-        return;
-      }
-      result.innerText += target.dataset.value;
+      result.innerText = history.innerText;
     }
+  }else{
+    return;
   }
 })
 
