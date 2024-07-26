@@ -53,12 +53,31 @@ header {
   justify-content: center;
 }
 
-aside {
+/* Socials */
+.socials-container {
   position: absolute;
   width: 30px;
   top: 0;
   left: 0;
   margin: 1rem;
+}
+
+.socials-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--secondary-color);
+  color: #fff;
+  border-radius: 50%;
+  z-index: 2;
+  opacity: 1;
+  visibility: visible;
+  font-size: 1rem;
 }
 
 .socials {
@@ -72,21 +91,15 @@ aside {
   visibility: visible;
   transform: scaleY(0);
 }
-/* 
-.socials.hide {
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(50px);
-} */
+
+.socials.show {
+  transform: scaleY(1);
+}
 
 .socials .btn {
   border: none;
   padding: 0;
   font-size: 1rem;
-}
-
-.socials.show {
-  transform: scaleY(1);
 }
 
 .socials > div {
@@ -109,24 +122,6 @@ aside {
 .socials.show > div {
   visibility: visible;
   opacity: 1;
-}
-
-.socials-button {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--secondary-color);
-  color: #fff;
-  border-radius: 50%;
-  z-index: 2;
-  opacity: 1;
-  visibility: visible;
-  font-size: 1rem;
 }
 
 .socials .socials-wrapper {
@@ -174,7 +169,7 @@ aside {
   width: 100%;
 }
 
-.calc-header-wrapper{
+.calc-header .calc-header-wrapper {
   position: relative;
   display: flex;
   align-items: center;
@@ -185,6 +180,11 @@ aside {
   transition: 1s all ease;
 }
 
+.calc-header.history .calc-header-wrapper {
+  height: calc(75vh - 2rem);
+}
+
+/* History */
 .calc-header .history-wrapper {
   top: 0;
   left: 0;
@@ -225,6 +225,7 @@ aside {
   opacity: 1;
 }
 
+/* Result */
 .calc-header .result-wrapper {
   position: relative;
   min-height: 8.5vh;
@@ -300,6 +301,7 @@ aside {
   border-radius: 6px;
 }
 
+/* History List */
 .calc-header .history {
   position: absolute;
   top: 0;
@@ -330,6 +332,12 @@ aside {
   border-radius: 6px;
 }
 
+.calc-header.history .history {
+  height: 80%;
+  opacity: 1;
+  transition: all .5s ease 1s;
+}
+
 .calc-header .history .history-inner {
   display: flex;
   flex-direction: column;
@@ -357,24 +365,8 @@ aside {
   font-size: 1.2rem;
 }
 
-.calc-header.history .history {
-  height: 80%;
-  opacity: 1;
-  transition: all .5s ease 1s;
-}
-
-.calc-header.history .calc-header-wrapper {
-  height: calc(75vh - 2rem);
-}
-
-.calc-header.history ~ .calc-body {
-  opacity: 0;
-  visibility: hidden;
-  transition: .5s all 0s ease;
-}
-
 /* Calculator Body */
-.calc-container .calc-body {
+.calc-body {
   height: 100%;
   flex-basis: auto;
   display: flex;
@@ -384,7 +376,18 @@ aside {
   transition: .5s all .5s ease;
 }
 
-.calc-container .calc-body .operator {
+.calc-header.history ~ .calc-body {
+  opacity: 0;
+  visibility: hidden;
+  transition: .5s all 0s ease;
+}
+
+.calc-body > * {
+  font-weight: 700;
+}
+
+/* Operator */
+.calc-body .operator {
   display: flex;
   align-items: center;
   justify-self: center;
@@ -392,7 +395,7 @@ aside {
   gap: .5rem;
 }
 
-.calc-container .calc-body .operator > div {
+.calc-body .operator > div {
   height: 75px;
   flex: 1 1 100%;
   display: flex;
@@ -403,12 +406,13 @@ aside {
   color: var(--secondary-color);
 }
 
-.calc-container .calc-body .operator > #equals {
+.calc-body .operator > #equals {
   background: var(--secondary-color);
   color: #fff;
 }
 
-.calc-container .calc-body .numbers {
+/* Numbers */
+.calc-body .numbers {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -416,7 +420,7 @@ aside {
   gap: 1rem;
 }
 
-.calc-container .calc-body .numbers > div {
+.calc-body .numbers > div {
   position: relative;
   height: 75px;
   width: calc(33.33% - 1rem);
@@ -428,16 +432,17 @@ aside {
   color: var(--secondary-color);
 }
 
-.calc-container .calc-body .numbers > div > *,
-.calc-container .calc-body .operator > div > * {
+.calc-body .numbers > div > *,
+.calc-body .operator > div > * {
   transition: .25s all ease;
 }
 
-.calc-container .calc-body .numbers > div:active > *,
-.calc-container .calc-body .operator > div:active > * {
+.calc-body .numbers > div:active > *,
+.calc-body .operator > div:active > * {
   transform: scale(.75);
 }
 
+/* Invalid Message */
 #invalid {
   position: absolute;
   bottom: 5rem;
@@ -460,44 +465,14 @@ aside {
   visibility: visible;
 }
 
+/* Animations for Writing Cursor */
 @keyframes write {
   50% {
     opacity: 0;
   }
 }
 
-@keyframes socials-show {
-  0% {
-    transform: translateY(50px);
-    opacity: 0;
-    visibility: hidden;
-  }
-
-  50% {
-    transform: translateY(-5px);
-  }
-
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-    visibility: visible;
-  }
-}
-
-@keyframes socials-out {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-    visibility: visible;
-  }
-
-  100% {
-    transform: translateY(50px);
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
+/* Responsiveness */
 @media (max-width: 1100px) {
   .btn {
     font-size: 1rem;
@@ -546,10 +521,12 @@ aside {
 
   .calc-container .calc-body .numbers > div {
     height: calc(20% - 1rem);
+    padding: .5rem;
   }
   
   .calc-container .calc-body .operator > div {
     height: calc(20% - 1rem);
+    padding: .5rem;
   }
 }
 

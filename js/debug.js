@@ -1,3 +1,5 @@
+// Pre-cleaning Code for debugging and testing new logic
+
 const calc = document.querySelector('.calc-container');
 const history = document.querySelector('.calc-header');
 const result = document.getElementById('result');
@@ -6,13 +8,11 @@ const invalidHandler = document.getElementById('invalid');
 const socials = document.querySelector('.socials');
 const socialsBtn = document.querySelector('.socials-button');
 
-// Socials Button
 socialsBtn.addEventListener('click', (e) => {
   e.preventDefault();
   socials.classList.toggle('show');
 })
 
-// Input and Calculation Calls
 calc.addEventListener('click', (e) => {
   const target = e.target.closest('.btn');
   e.preventDefault();
@@ -83,36 +83,45 @@ calc.addEventListener('click', (e) => {
         }
       }
       else{
-        numberInput(result.innerText, part);
         switch(target.id){
           case 'number-1':
+            numberInput(result.innerText, part);
             result.innerText += target.dataset.value;
             break;
           case 'number-2':
+            numberInput(result.innerText, part);
             result.innerText += target.dataset.value;
             break;
           case 'number-3':
+            numberInput(result.innerText, part);
             result.innerText += target.dataset.value;
             break;
           case 'number-4':
+            numberInput(result.innerText, part);
             result.innerText += target.dataset.value;
             break;
           case 'number-5':
+            numberInput(result.innerText, part);
             result.innerText += target.dataset.value;
             break;
           case 'number-6':
+            numberInput(result.innerText, part);
             result.innerText += target.dataset.value;
             break;
           case 'number-7':
+            numberInput(result.innerText, part);
             result.innerText += target.dataset.value;
             break;
           case 'number-8':
+            numberInput(result.innerText, part);
             result.innerText += target.dataset.value;
             break;
           case 'number-9':
+            numberInput(result.innerText, part);
             result.innerText += target.dataset.value;
             break;
           case 'number-0':
+            numberInput(result.innerText, part);
             result.innerText += target.dataset.value;
             break;
           default:
@@ -152,7 +161,6 @@ calc.addEventListener('click', (e) => {
   }
 })
 
-// Checking if current equations ends with certain characters
 const charactersCheck = () => {
   if(result.textContent.endsWith('÷') || result.textContent.endsWith('×') || result.textContent.endsWith('−') || result.textContent.endsWith('+') || result.textContent.endsWith('(') || result.innerText === ''){
     return true;
@@ -161,7 +169,6 @@ const charactersCheck = () => {
   }
 }
 
-// Checking if current equations ends with ')' or its just '0'
 const numberInput = (resultText, part) => {
   if(resultText.endsWith(')')){
     result.innerText += '×';  
@@ -170,7 +177,47 @@ const numberInput = (resultText, part) => {
   }
 }
 
-// Counting open and closed brackets
+const addingHistory = (equation, result) =>{
+  const equationHistory = document.createElement("div");
+  const resultHistory = document.createElement("div");
+
+  equationHistory.classList.add('calculations-history', 'btn');
+  resultHistory.classList.add('results-history', 'btn');
+
+  equationHistory.textContent = equation;
+  resultHistory.textContent = result;
+
+  historyWrapper.appendChild(equationHistory);
+  historyWrapper.appendChild(resultHistory);
+}
+
+history.addEventListener('click', (e) => {
+  const target = e.target;
+
+  if(target.closest('#history-btn')){
+    history.classList.toggle('history');
+  }else if(target.closest('#remove-history-btn')){
+    history.querySelector('.history-inner').textContent = '';
+  }else if(target.closest('#clear-button')){
+    result.innerText = '';
+  }else if(target.closest('#delete-button')){
+    result.innerText = result.innerText.slice(0, -1);
+  }
+})
+
+historyWrapper.addEventListener('click', (e) => {
+  const history = e.target.closest('.btn');
+  if(history){
+    if(result.innerText.endsWith('÷') || result.innerText.endsWith('×') || result.innerText.endsWith('−') || result.innerText.endsWith('+')){
+      result.innerText += history.innerText;
+    }else{
+      result.innerText = history.innerText;
+    }
+  }else{
+    return;
+  }
+})
+
 const checkBrackets = (equation) => {
   let temp = equation;
   let open = 0;
@@ -188,7 +235,6 @@ const checkBrackets = (equation) => {
   return {open, close};
 }
 
-// Adding Closed Brackets if less than opens
 const setClosedBrackets = (equation, open, close) => {
   let temp = equation;
   if(close === 0){
@@ -200,75 +246,6 @@ const setClosedBrackets = (equation, open, close) => {
   result.innerText = temp;
 }
 
-// Adding Equations to history-inner class
-const addingHistory = (equation, result) => {
-  const oldEq = historyWrapper.querySelector('#eq-latest');
-  const oldRes = historyWrapper.querySelector('#res-latest');
-
-  if(oldEq && oldRes){
-    console.log(equation);
-    console.log(result);
-    if(oldEq.innerText === equation && oldRes.innerText == result){
-      return;
-    }
-  }
-
-  const equationHistory = document.createElement("div");
-  const resultHistory = document.createElement("div");
-
-  equationHistory.classList.add('calculations-history', 'btn');
-  resultHistory.classList.add('results-history', 'btn');
-  
-  equationHistory.textContent = equation;
-  resultHistory.textContent = result;
-
-  setLatestHistory(equationHistory, resultHistory, oldEq, oldRes);
-  
-  historyWrapper.appendChild(equationHistory);
-  historyWrapper.appendChild(resultHistory);
-}
-
-// Set Latest History
-const setLatestHistory = (equation, result, oldEq, oldRes) => {
-  if(oldEq && oldRes){
-    oldEq.removeAttribute('id');
-    oldRes.removeAttribute('id');
-  }
-
-  equation.setAttribute('id', 'eq-latest');
-  result.setAttribute('id', 'res-latest');
-}
-
-// History Button
-history.addEventListener('click', (e) => {
-  const target = e.target;
-
-  if(target.closest('#history-btn')){
-    history.classList.toggle('history');
-  }else if(target.closest('#remove-history-btn')){
-    history.querySelector('.history-inner').textContent = '';
-  }else if(target.closest('#clear-button')){
-    result.innerText = '';
-  }else if(target.closest('#delete-button')){
-    result.innerText = result.innerText.slice(0, -1);
-  }
-})
-
-// Adding equations on history to current equations
-historyWrapper.addEventListener('click', (e) => {
-  const history = e.target.closest('.btn');
-  if(history){
-    if(result.innerText.endsWith('÷') || result.innerText.endsWith('×') || result.innerText.endsWith('−') || result.innerText.endsWith('+')){
-      result.innerText += history.innerText;
-    }else{
-      result.innerText = history.innerText;
-    }
-  }else{
-    return;
-  }
-})
-
-// Text Splitter, Cleaning and Calculations Caller
 const calculation = (equation) => {
   const number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-'];
   const operators = ['÷', '×', '−', '+', '(', ')'];
@@ -294,53 +271,65 @@ const calculation = (equation) => {
     output.push(temp);
   }
 
-  // If theres - (minus) and followed with char but numbers set that to -1 and adding × to equations with index after it
-  let cleanNegative = handleNegativeSigns(output, equations);
-
-  output = cleanNegative.output;
-  equations = cleanNegative.equations;
-
-  let start = 0;
-  let end = equations.length;
-
-  execute(equations, output, start, end);
-
-  return output;
-}
-
-const handleNegativeSigns = (output, equations) => {
   let indices = [];
   output = output.map((item, index) => {
       if (item === '-') {
-        indices.push(index);
-        return -1;
+          indices.push(index);
+          return -1;
       }
       return item;
   });
 
+  console.log(indices);
 
   indices.forEach(index => {
     let insertTimes = index + 1;
     equations.splice(insertTimes, 0, '×');
   })
 
-  return {output, equations};
+  console.log(output);
+  console.log(equations);
+
+  let start = 0;
+  let end = equations.length;
+
+  execute(equations, output, start, end);
+
+  console.log(output);
+
+  return output;
 }
 
-// Calculation Caller
 const execute = (equations, output, start, end) => {
   let prior = 0;
   while(prior <= 5){
     let noMatch = true;
+    console.log("Priority: "+prior);
     if(priorityCheck(equations, output, prior, noMatch, start, end)){
+      if(prior === 0){
+        console.log("There is no (");
+      }else if(prior === 1){
+        console.log("There is no /");
+      }else if(prior === 2){
+        console.log("There is no x");
+      }else if(prior === 3){
+        console.log("There is no -");
+      }else if(prior === 4){
+        console.log("There is no +");
+      }else if(prior === 5){
+        console.log("There is no )");
+      }
+      console.log("Prior ditambah");
       prior++;
     }
+    console.log("========================================")
   }
 }
 
-// Calculation
 const priorityCheck = (equations, output, prior, noMatch, bracketsStart, bracketsEnd) => {
   for(let index = bracketsStart; index < bracketsEnd; index++){
+    console.log("Angka sekarang: "+output.slice(bracketsStart, bracketsEnd));
+    console.log("Operator sekarang: "+equations.slice(bracketsStart, bracketsEnd));
     let operator = equations[index];
     let closedBrackets = false;
     let insideBrackets = false;
@@ -348,38 +337,51 @@ const priorityCheck = (equations, output, prior, noMatch, bracketsStart, bracket
       let a = parseFloat(output[index]);
       let b = parseFloat(output[index + 1]);
       let result = a;
+      console.log(`Lakukan ${a} ${operator} ${b}`);
       switch(priority[operator]){
         case 0:
+          console.log('(');
 
-          let {startBrackets, endBrackets} = findBracketsPos(equations, index)
+          let {startBrackets, endBrackets} = findEndBrackets(equations, index)
 
           equations.splice(startBrackets, 1);
 
+          console.log("Operator dalam Kurung: "+equations.slice(startBrackets, endBrackets - 1));
+
           if(equations.slice(startBrackets, endBrackets - 1) == ''){
+            console.log("OP");
             equations.splice(index, 1);
             return noMatch;
           }
+          
+          console.log("Angka dalam Kurung: "+output.slice(startBrackets, endBrackets - 1));
 
           execute(equations, output, startBrackets, endBrackets - 1);
           
           insideBrackets = true;
           break;
         case 1:
+          console.log('/');
           result = Math.ceil((a / b) * 100) / 100;
           break;
         case 2:
+          console.log('x');
           result = a * b;
           break;
         case 3:
+          console.log('-');
           result = a - b;
           break;
         case 4:
+          console.log('+');
           result = a + b;
           break;
         case 5:
+          console.log('Ketemu )');
           closedBrackets = true;
           break;
         default:
+          console.log("Invalid Input");
           break;
       }
       if(closedBrackets){
@@ -387,26 +389,31 @@ const priorityCheck = (equations, output, prior, noMatch, bracketsStart, bracket
         return noMatch;
       }
       else if(!insideBrackets){
+        console.log(`Hasil= `+result);
         output.splice(index, 2, result);
         equations.splice(index, 1);
       }
       noMatch = false;
       break;
     }else if(priority[operator] === 5){
+      console.log('Ketemu ) tapi tidak sesuai');
       return noMatch;
+    }else{
+      console.log("Try Looking for higher priority");
+      console.log(`${operator} not priority right now`);
     }
   }
 
   return noMatch;
 }
 
-// Finding Brackets Positions
-const findBracketsPos = (equations, index) => {
+const findEndBrackets = (equations, index) => {
   let startBrackets = index;
   let endBrackets = index + 1;
 
   while(endBrackets < equations.length){
     if(equations[endBrackets] === ')'){
+      console.log(`Ketemu tutup kurung, kembalikan index ${startBrackets} dan ${endBrackets}`);
       return {startBrackets, endBrackets};
     }
     endBrackets++;
@@ -415,7 +422,29 @@ const findBracketsPos = (equations, index) => {
   return null;
 }
 
-// Priority
+const findBrackets = (equations, index) => {
+  console.log("Cari Posisi Brackets");
+  let startBrackets = index;
+  let endBrackets = index + 1;
+  console.log("StartBrackets Pos: " + startBrackets);
+  while (endBrackets < equations.length) {
+    if (equations[endBrackets] === ')') {
+      console.log(`Ketemu tutup kurung, kembalikan index ${startBrackets} dan ${endBrackets}`);
+      return {startBrackets, endBrackets};
+    } else if (equations[endBrackets] === '(') {
+      console.log("Ketemu nested Brackets pada index: " + endBrackets);
+      const innerBrackets = findBrackets(equations, endBrackets);
+
+      if(innerBrackets){
+        return innerBrackets;
+      }
+    }
+    endBrackets++;
+  }
+
+  return null;
+}
+
 const priority = {
   '÷': 1,
   '×': 2, 
