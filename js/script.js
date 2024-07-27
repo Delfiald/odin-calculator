@@ -136,19 +136,7 @@ calc.addEventListener('click', (e) => {
         return;
       }else{
         if(target.id === 'equals'){
-          // Count Brackets
-          let {open, close} = checkBrackets(result.innerText);
-
-          // Adding Closed Brackets if its less than opens
-          setClosedBrackets(result.innerText, open, close);
-
-          // Calculation
-          const finalResult = calculation(result.innerText);
-
-          // Adding Equations and result to History
-          addingHistory(result.innerText, finalResult);
-          
-          result.innerText = finalResult;
+          operate();
         }else{
           result.innerText += target.dataset.value;
         }
@@ -188,6 +176,27 @@ document.addEventListener('keydown', (e) => {
         return;
       }else{
         result.textContent += '×(';
+      }
+    }
+  }else if(button === 'F9'){
+    if(charactersCheck()){
+      result.innerText += '(-';
+    }else if(result.textContent.endsWith(')')){
+      result.innerText += '×(-';
+    }
+    else{
+      let length = latest.length;
+      if(latest.endsWith('-')){
+        result.innerText = result.innerText.slice(result.length, -2);
+      }else if(latest.includes('(-')){
+        latest = latest.substring(2);
+        result.innerText = result.innerText.slice(result.length, -length);
+        
+        result.innerText += latest;
+      }else{
+        result.innerText = result.innerText.slice(result.length, -length);
+        latest = '(-' + latest;
+        result.innerText += latest;
       }
     }
   }else{
@@ -260,24 +269,34 @@ document.addEventListener('keydown', (e) => {
         if(invalid()){
           return;
         }
-        let {open, close} = checkBrackets(result.innerText);
-
-        // Adding Closed Brackets if its less than opens
-        setClosedBrackets(result.innerText, open, close);
-
-        // Calculation
-        const finalResult = calculation(result.innerText);
-
-        // Adding Equations and result to History
-        addingHistory(result.innerText, finalResult);
-        
-        result.innerText = finalResult;
+        operate();
+        break;
+      case 'Enter':
+        if(invalid()){
+          return;
+        }
+        operate();
         break;
       default:
         return
     }
   }
 })
+
+const operate = () => {
+  let {open, close} = checkBrackets(result.innerText);
+
+  // Adding Closed Brackets if its less than opens
+  setClosedBrackets(result.innerText, open, close);
+
+  // Calculation
+  const finalResult = calculation(result.innerText);
+
+  // Adding Equations and result to History
+  addingHistory(result.innerText, finalResult);
+  
+  result.innerText = finalResult;
+}
 
 // Invalid Handler
 const invalid = () => {
