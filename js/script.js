@@ -10,6 +10,7 @@ const socialsBtn = document.querySelector('.socials-button');
 socialsBtn.addEventListener('click', (e) => {
   e.preventDefault();
   socials.classList.toggle('show');
+  socialsBtn.classList.toggle('show');
 })
 
 // Paused Cursor Animations when typing
