@@ -27,6 +27,24 @@ const typingEffect = (typing) => {
   }, 1000);
 }
 
+const operatorHandler = () => {
+  let operatorCounts = result.innerText.match(/[÷×−+]/g);
+
+  console.log(operatorCounts);
+
+  if(operatorCounts && operatorCounts.length > 40){
+    invalidHandler.innerText = `Can't Enter More than 40 Operators`
+
+    invalidHandler.classList.add('show');
+    setTimeout(() => {
+      invalidHandler.classList.remove('show');
+    }, 2000);
+    return true;
+  }
+
+  return false;
+}
+
 // Input and Calculation Calls
 calc.addEventListener('click', (e) => {
   const target = e.target.closest('.btn');
@@ -129,12 +147,17 @@ calc.addEventListener('click', (e) => {
     // Operators
     }else if(target.closest('.operator')){
       if(charactersCheck() || result.innerText.endsWith('-')){
+        invalidHandler.innerText = `Invalid Format Used`
         invalidHandler.classList.add('show');
         setTimeout(() => {
           invalidHandler.classList.remove('show');
         }, 2000);
         return;
       }else{
+        if(operatorHandler()){
+          return;
+        }
+        
         if(target.id === 'equals'){
           operate();
         }else{
@@ -242,37 +265,37 @@ document.addEventListener('keydown', (e) => {
         result.innerText += 0;
         break;
       case '+':
-        if(invalid()){
+        if(invalid() || operatorHandler()){
           return;
         }
         result.innerText += '+';
         break;
       case '-':
-        if(invalid()){
+        if(invalid() || operatorHandler()){
           return;
         }
-        result.innerText += '-';
+        result.innerText += '−';
         break;
       case '*':
-        if(invalid()){
+        if(invalid() || operatorHandler()){
           return;
         }
         result.innerText += '×';
         break;
       case '/':
-        if(invalid()){
+        if(invalid() || operatorHandler()){
           return;
         }
         result.innerText += '÷';
         break;
       case '=':
-        if(invalid()){
+        if(invalid() || operatorHandler()){
           return;
         }
         operate();
         break;
       case 'Enter':
-        if(invalid()){
+        if(invalid() || operatorHandler()){
           return;
         }
         operate();
@@ -301,6 +324,7 @@ const operate = () => {
 // Invalid Handler
 const invalid = () => {
   if(charactersCheck() || result.innerText.endsWith('-')){
+    invalidHandler.innerText = `Invalid Format Used`
     invalidHandler.classList.add('show');
     setTimeout(() => {
       invalidHandler.classList.remove('show');
