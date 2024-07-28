@@ -12,23 +12,30 @@ socialsBtn.addEventListener('click', (e) => {
   socials.classList.toggle('show');
 })
 
+// Paused Cursor Animations when typing
+const typingEffect = (typing) => {
+  let typingTimeOut;
+
+  if(!typing){
+    typing = true;
+    result.classList.add('paused');
+  }
+  clearTimeout(typingTimeOut);
+  typingTimeout = setTimeout(() => {
+    typing = false;
+    result.classList.remove('paused');
+  }, 1000);
+}
+
 // Input and Calculation Calls
 calc.addEventListener('click', (e) => {
   const target = e.target.closest('.btn');
   e.preventDefault();
   let typing = false;
-  let typingTimeOut;
   
   if(target){
-    if(!typing){
-      typing = true;
-      result.classList.add('paused');
-    }
-    clearTimeout(typingTimeOut);
-    typingTimeout = setTimeout(() => {
-      typing = false;
-      result.classList.remove('paused');
-    }, 1000);
+
+    typingEffect(typing);
 
     let part = result.innerText.split(/[÷/×/−/+]/);
     let latest = part[part.length - 1];
@@ -129,19 +136,7 @@ calc.addEventListener('click', (e) => {
         return;
       }else{
         if(target.id === 'equals'){
-          // Count Brackets
-          let {open, close} = checkBrackets(result.innerText);
-
-          // Adding Closed Brackets if its less than opens
-          setClosedBrackets(result.innerText, open, close);
-
-          // Calculation
-          const finalResult = calculation(result.innerText);
-
-          // Adding Equations and result to History
-          addingHistory(result.innerText, finalResult);
-          
-          result.innerText = finalResult;
+          operate();
         }else{
           result.innerText += target.dataset.value;
         }
@@ -151,6 +146,170 @@ calc.addEventListener('click', (e) => {
     return;
   }
 })
+
+document.addEventListener('keydown', (e) => {
+  const button = e.key;
+
+  let part = result.innerText.split(/[÷/×/−/+]/);
+  let latest = part[part.length - 1];
+
+  if(button === 'Delete'){
+    result.innerText = ''
+  }else if(button === 'Backspace'){
+    result.innerText = result.innerText.slice(0, -1);
+  }else if(button === '.'){
+    if(!latest.includes('.')){
+      if(result.textContent.endsWith(')')){
+        result.innerText += '×0'
+      }else if(charactersCheck()){
+        result.innerText += '0';
+      }
+      result.innerText += '.';
+    }
+  }else if(button === '(' || button === ')'){
+    if(charactersCheck() || result.innerText.endsWith('-')){
+      result.textContent += '(';
+    }else{
+      let {open, close} = checkBrackets(result.innerText);
+      if(open > close){
+        result.textContent += ')';
+        return;
+      }else{
+        result.textContent += '×(';
+      }
+    }
+  }else if(button === 'F9'){
+    if(charactersCheck()){
+      result.innerText += '(-';
+    }else if(result.textContent.endsWith(')')){
+      result.innerText += '×(-';
+    }
+    else{
+      let length = latest.length;
+      if(latest.endsWith('-')){
+        result.innerText = result.innerText.slice(result.length, -2);
+      }else if(latest.includes('(-')){
+        latest = latest.substring(2);
+        result.innerText = result.innerText.slice(result.length, -length);
+        
+        result.innerText += latest;
+      }else{
+        result.innerText = result.innerText.slice(result.length, -length);
+        latest = '(-' + latest;
+        result.innerText += latest;
+      }
+    }
+  }else{
+    switch(button) {
+      case '1':
+        numberInput(result.innerText, part);
+        result.innerText += 1;
+        break;
+      case '2':
+        numberInput(result.innerText, part);
+        result.innerText += 2;
+        break;
+      case '3':
+        numberInput(result.innerText, part);
+        result.innerText += 3;
+        break;
+      case '4':
+        numberInput(result.innerText, part);
+        result.innerText += 4;
+        break;
+      case '5':
+        numberInput(result.innerText, part);
+        result.innerText += 5;
+        break;
+      case '6':
+        numberInput(result.innerText, part);
+        result.innerText += 6;
+        break;
+      case '7':
+        numberInput(result.innerText, part);
+        result.innerText += 7;
+        break;
+      case '8':
+        numberInput(result.innerText, part);
+        result.innerText += 8;
+        break;
+      case '9':
+        numberInput(result.innerText, part);
+        result.innerText += 9;
+        break;
+      case '0':
+        numberInput(result.innerText, part);
+        result.innerText += 0;
+        break;
+      case '+':
+        if(invalid()){
+          return;
+        }
+        result.innerText += '+';
+        break;
+      case '-':
+        if(invalid()){
+          return;
+        }
+        result.innerText += '-';
+        break;
+      case '*':
+        if(invalid()){
+          return;
+        }
+        result.innerText += '×';
+        break;
+      case '/':
+        if(invalid()){
+          return;
+        }
+        result.innerText += '÷';
+        break;
+      case '=':
+        if(invalid()){
+          return;
+        }
+        operate();
+        break;
+      case 'Enter':
+        if(invalid()){
+          return;
+        }
+        operate();
+        break;
+      default:
+        return
+    }
+  }
+})
+
+const operate = () => {
+  let {open, close} = checkBrackets(result.innerText);
+
+  // Adding Closed Brackets if its less than opens
+  setClosedBrackets(result.innerText, open, close);
+
+  // Calculation
+  const finalResult = calculation(result.innerText);
+
+  // Adding Equations and result to History
+  addingHistory(result.innerText, finalResult);
+  
+  result.innerText = finalResult;
+}
+
+// Invalid Handler
+const invalid = () => {
+  if(charactersCheck() || result.innerText.endsWith('-')){
+    invalidHandler.classList.add('show');
+    setTimeout(() => {
+      invalidHandler.classList.remove('show');
+    }, 2000);
+    return true;
+  }
+
+  return false;
+}
 
 // Checking if current equations ends with certain characters
 const charactersCheck = () => {
