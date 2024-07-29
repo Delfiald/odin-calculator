@@ -168,7 +168,15 @@ header {
   visibility: hidden;
 }
 
-.socials .socials-wrapper > i{
+.socials .socials-wrapper a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--secondary-color);
+}
+
+.socials .socials-wrapper i{
   font-size: 1.25rem;
 }
 
